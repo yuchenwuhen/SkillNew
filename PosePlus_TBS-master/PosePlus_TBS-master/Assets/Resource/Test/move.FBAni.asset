@@ -1,0 +1,185 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38e19fe12eeee04e95cb43c390bbabd, type: 3}
+  m_Name: move.FBAni
+  m_EditorClassIdentifier: 
+  boneinfo:
+  - 
+  frames:
+  - fid: 0
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -1.8, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 7
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 1
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -1.85936, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 2
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -2.02048, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 3
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -2.2579198, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 4
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -2.5462399, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 5
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -2.86, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 6
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -3.17376, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 7
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -3.46208, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 8
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -3.6995196, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 9
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -3.8606398, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  - fid: 10
+    key: 1
+    box_key: 0
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: -3.92, y: 6.58, z: -6.53}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 1
+    eventsinfo: []
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    aduioList: []
+  subclips: []
+  fps: 60
+  loop: 0
