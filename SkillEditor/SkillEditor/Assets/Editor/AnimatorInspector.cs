@@ -88,7 +88,7 @@ public class AnimatorInspector : Editor
 
         //这里重新检查动画曲线，找出动画中涉及的Transform部分，更精确
         List<Transform> cdpath = new List<Transform>();
-        AnimationClipCurveData[] curveDatas = AnimationUtility.GetAllCurves(clip, true);
+        EditorCurveBinding[] curveDatas = AnimationUtility.GetCurveBindings(clip);
         foreach (var dd in curveDatas)
         {
             Transform tran = ani.transform.Find(dd.path);
