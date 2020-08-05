@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,8 @@ using UnityEngine;
 public class AniPlayerInspector : Editor
 {
     bool bPlay = false;
+
+    DateTime last = DateTime.Now;
 
     public override void OnInspectorGUI()
     {
@@ -28,10 +31,10 @@ public class AniPlayerInspector : Editor
                 {
 
                     con.Play(c);
-                    //con.Play();
                     bPlay = true;
-                    //return;
-                    //CloneAni(c);
+                    GameObject go = target as GameObject;
+                    Selection.activeGameObject.GetComponent<AudioSource>().Play();
+
                 }
 
                 GUILayout.EndHorizontal();
@@ -54,6 +57,15 @@ public class AniPlayerInspector : Editor
                 GUILayout.EndHorizontal();
 
             }
+        }
+
+        if (bPlay)
+        {
+            DateTime _now = DateTime.Now;
+            float delta = (float)(_now - last).TotalSeconds;
+            last = _now;
+            con._OnUpdate(delta);
+            Repaint();
         }
     }
 

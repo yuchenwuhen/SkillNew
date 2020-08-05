@@ -16,8 +16,6 @@ public class  BoxPool
 }
 class Window_AniEditor : EditorWindow
 {
- 
-
     Vector2 clipfuncpos;
     Vector2 cachefuncpos;
     Vector2 emptyfuncpos;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[Serializable]
 public class PoseBoneMatrix : ICloneable
 {
     [SerializeField]
@@ -25,6 +26,49 @@ public class PoseBoneMatrix : ICloneable
     }
     [SerializeField]
     public changetag tag;
+
+    public void UpdateTran(Transform trans, bool bAdd)
+    {
+        if (!bAdd || tag == changetag.All)
+        {
+            trans.localScale = s;
+            trans.localPosition = t;
+            trans.localRotation = r;
+
+            //trans.localRotation = Quaternion.Euler(r);
+            return;
+        }
+        switch (tag)
+        {
+            case changetag.NoChange:
+                return;
+            case changetag.Rotate:
+                trans.localRotation = r;
+                //trans.localRotation = Quaternion.Euler(r);
+                break;
+            case changetag.Trans:
+                trans.localPosition = t;
+                break;
+            case changetag.Scale:
+                trans.localScale = s;
+                break;
+            case changetag.RotateScale:
+                trans.localScale = s;
+                trans.localRotation = r;
+                //trans.localRotation = Quaternion.Euler(r);
+                break;
+            case changetag.TransRotate:
+                trans.localPosition = t;
+                trans.localRotation = r;
+                //trans.localRotation = Quaternion.Euler(r);
+                break;
+            case changetag.TransScale:
+                trans.localScale = s;
+                trans.localPosition = t;
+                break;
+        };
+
+    }
 
     //unity默认实现的四元数相等精度太低
     static bool QuaternionEqual(Quaternion left, Quaternion right)
@@ -94,5 +138,20 @@ public class PoseBoneMatrix : ICloneable
         bm.s = this.s;
         bm.t = this.t;
         return bm;
+    }
+
+    public static PoseBoneMatrix Lerp(PoseBoneMatrix left, PoseBoneMatrix right, float lerp)
+    {
+        PoseBoneMatrix m = new PoseBoneMatrix();
+        m.tag = changetag.All;
+        m.r = Quaternion.Lerp(left.r, right.r, lerp);
+        if (float.IsNaN(m.r.x))
+        {
+            m.r = Quaternion.identity;
+        }
+        m.t = Vector3.Lerp(left.t, right.t, lerp);
+        m.s = Vector3.Lerp(left.s, right.s, lerp);
+        return m;
+
     }
 }
