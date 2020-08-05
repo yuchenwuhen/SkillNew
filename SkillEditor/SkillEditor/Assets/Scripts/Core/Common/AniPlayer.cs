@@ -61,7 +61,9 @@ public class AniPlayer : MonoBehaviour
             {"box_behurt", new BoxColor(Color.red, new Color(1f, 0f, 0f, 0.3f))}
         };
 
-    public void _OnUpdate(float delta)
+    private float m_playTime = 0;
+
+    public void OnUpdate(float delta)
     {
         //帧推行
         if (m_lastClip == null)
@@ -184,6 +186,7 @@ public class AniPlayer : MonoBehaviour
     /// <param name="crosstimer"></param>
     public void Play(AniClip clip, SubClip clipsub = null, bool? clipLoop = null, bool? clipsubLoop = null, float crosstimer = 0)
     {
+        onece = false;
         if (clipsub != null)
         {
             m_loop = clipsub.loop;
@@ -294,6 +297,7 @@ public class AniPlayer : MonoBehaviour
                 SetDebugDot(clip.frames[frame]); //设置触发点
             }
 
+            SetEffect(clip.frames[frame]); //设置/检测特效
             if (m_playRunTime)
             {
                 //SetEffect(clip.frames[frame]); //设置/检测特效
@@ -568,6 +572,91 @@ public class AniPlayer : MonoBehaviour
             collider_Vis.updateColl();
         }
     }
+
+    #endregion
+
+    #region 特效
+
+    class die
+    {
+        public int effid;
+        public int lifetime; //per pose -1;
+    }
+
+    List<die> livetimelist = new List<die>();
+
+    public int dir = 1;
+    private bool onece = false;
+    GameObject go = null;
+    //每帧检测
+    void SetEffect(Frame f)
+    {
+        Debug.Log("time:" + frameCounter/m_fps);
+        //CheckEffect();
+        foreach (var e in f.effectList)
+        {
+            Transform o = this.transform.Find(e.follow);
+            if (e.lifeframe > 0)
+            {
+                if (o != null)
+                {
+                    //die d = new die();
+                    //d.lifetime = e.lifeframe;
+                    //d.effid = AniResource.PlayEffectLooped(e.name, e.position, dir, o);
+                    //livetimelist.Add(d);
+                    if (!onece)
+                    {
+                        go = GameObject.Instantiate(Resources.Load<GameObject>(e.name));
+                        go.transform.SetParent(o);
+                        onece = true;
+                        
+                    }
+                    if (go != null)
+                    {
+                        go.GetComponent<ParticleSystem>().Simulate(m_timer);
+                        Debug.Log("time:" + m_timer);
+                    }
+
+                }
+            }
+            else
+            {
+                if (!onece)
+                {
+                    go = GameObject.Instantiate(Resources.Load<GameObject>(e.name));
+                    go.transform.SetParent(o);
+                    onece = true;
+                    go.GetComponent<ParticleSystem>().Play();
+                }
+                if (go != null)
+                {
+                    go.GetComponent<ParticleSystem>().Simulate(m_timer);
+                    Debug.Log("time:" + m_timer);
+                }
+            }
+        }
+    }
+
+    //管理生命周期
+    void CheckEffect()
+    {
+        //编辑器中误操作，移除所有为null的引用
+        for (int i = livetimelist.Count - 1; i >= 0; i--)
+        {
+            livetimelist[i].lifetime--; //生命周期每帧 -1
+
+            if (livetimelist[i].lifetime <= 0) //生命周期结束 删除特效
+            {
+                //AniResource.CloseEffectLooped(livetimelist[i].effid);
+                livetimelist.RemoveAt(i);
+            }
+        }
+
+        //Resources.UnloadUnusedAssets();
+        //GC.Collect();
+    }
+
+
 
     #endregion
 }

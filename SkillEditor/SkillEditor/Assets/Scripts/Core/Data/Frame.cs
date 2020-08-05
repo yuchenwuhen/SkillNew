@@ -35,6 +35,12 @@ public class Frame : ICloneable
     [SerializeField]
     public List<Dot> dotesinfo = new List<Dot>();
 
+    /// <summary>
+    /// 特效
+    /// </summary>
+    [SerializeField]
+    public List<Effect> effectList = new List<Effect>();
+
     public Frame()
     {
 
@@ -103,4 +109,20 @@ public class Dot
         m.position = Vector3.Lerp(left.position, right.position, lerp);
         return m;
     }
+}
+
+//特效
+[Serializable]
+public class Effect
+{
+    [SerializeField]
+    public string name = "noname";
+    [SerializeField]
+    public Vector3 position = Vector3.zero;
+    [SerializeField]
+    public string follow = "noObj";
+    [SerializeField]
+    public int lifeframe = 0;
+    [SerializeField]
+    public bool isFollow = false;
 }

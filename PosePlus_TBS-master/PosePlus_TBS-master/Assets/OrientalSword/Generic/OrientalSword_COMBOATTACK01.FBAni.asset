@@ -155,7 +155,7 @@ MonoBehaviour:
   - fid: 0
     key: 1
     box_key: 1
-    dot_key: 0
+    dot_key: 1
     lerp: 0
     bonesinfo:
     - t: {x: -0, y: 0.41, z: 0}
@@ -434,7 +434,7 @@ MonoBehaviour:
   - fid: 1
     key: 1
     box_key: 1
-    dot_key: 1
+    dot_key: 0
     lerp: 0
     bonesinfo:
     - t: {x: -0, y: 0, z: 0}
@@ -706,21 +706,10 @@ MonoBehaviour:
       r: {x: -4.6566134e-10, y: -0.000000001731678, z: -4.6566134e-10, w: 1}
       tag: 7
     eventsinfo: []
-    boxesinfo:
-    - mBoxType: 
-      mName: 
-      mIndex: 0
-      mPosition: {x: 0, y: 0, z: 0}
-      mSize: {x: 0, y: 0, z: 0}
+    boxesinfo: []
     dotesinfo: []
-    effectList:
-    - name: Effect/FX_ArtilleryStrike_01
-      position: {x: 0, y: 0, z: 0}
-      follow: effect
-      lifeframe: 40
-      isFollow: 0
-    aduioList:
-    - hook_hit
+    effectList: []
+    aduioList: []
   - fid: 2
     key: 1
     box_key: 0
@@ -17461,6 +17450,10 @@ MonoBehaviour:
     dotesinfo: []
     effectList: []
     aduioList: []
-  subclips: []
+  subclips:
+  - name: noname
+    loop: 0
+    startframe: 0
+    endframe: 1
   fps: 30
   loop: 0

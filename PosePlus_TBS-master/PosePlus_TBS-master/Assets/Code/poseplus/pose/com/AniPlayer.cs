@@ -298,6 +298,7 @@ namespace FB.PosePlus
 
         public void SetPose(AniClip clip, int frame, bool reset = false, Transform parent = null)
         {
+            Debug.Log("time" + timer);
             if (clip.bonehash != transcode)
             {
                 trans = new Transform[clip.boneinfo.Count];

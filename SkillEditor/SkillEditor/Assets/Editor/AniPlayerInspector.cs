@@ -29,12 +29,8 @@ public class AniPlayerInspector : Editor
                 GUILayout.Label(c.name + "(" + (c.loop ? "loop" : "") + c.frames.Count + ")");
                 if (GUILayout.Button("play", GUILayout.Width(50)))
                 {
-
                     con.Play(c);
                     bPlay = true;
-                    GameObject go = target as GameObject;
-                    Selection.activeGameObject.GetComponent<AudioSource>().Play();
-
                 }
 
                 GUILayout.EndHorizontal();
@@ -64,7 +60,7 @@ public class AniPlayerInspector : Editor
             DateTime _now = DateTime.Now;
             float delta = (float)(_now - last).TotalSeconds;
             last = _now;
-            con._OnUpdate(delta);
+            con.OnUpdate(delta);
             Repaint();
         }
     }

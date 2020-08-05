@@ -17,8 +17,8 @@ MonoBehaviour:
   frames:
   - fid: 0
     key: 1
-    box_key: 0
-    dot_key: 0
+    box_key: 1
+    dot_key: 1
     lerp: 0
     bonesinfo:
     - t: {x: 0, y: 0, z: 0}
@@ -27,6 +27,12 @@ MonoBehaviour:
       tag: 7
     boxesinfo: []
     dotesinfo: []
+    effectList:
+    - name: FX_ArtilleryStrike_01
+      position: {x: 0, y: 0, z: 0}
+      follow: GameObject
+      lifeframe: 5
+      isFollow: 0
   - fid: 1
     key: 1
     box_key: 0
@@ -39,6 +45,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 2
     key: 1
     box_key: 0
@@ -51,6 +58,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 3
     key: 1
     box_key: 0
@@ -63,6 +71,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 4
     key: 1
     box_key: 0
@@ -75,6 +84,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 5
     key: 1
     box_key: 0
@@ -87,6 +97,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 6
     key: 1
     box_key: 0
@@ -99,6 +110,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 7
     key: 1
     box_key: 0
@@ -111,6 +123,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 8
     key: 1
     box_key: 0
@@ -123,6 +136,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 9
     key: 1
     box_key: 0
@@ -135,10 +149,11 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   - fid: 10
     key: 1
-    box_key: 0
-    dot_key: 0
+    box_key: 1
+    dot_key: 1
     lerp: 0
     bonesinfo:
     - t: {x: 3.9, y: 0, z: 0}
@@ -147,6 +162,7 @@ MonoBehaviour:
       tag: 1
     boxesinfo: []
     dotesinfo: []
+    effectList: []
   subclips: []
   fps: 60
   loop: 0
