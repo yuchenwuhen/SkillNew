@@ -41,6 +41,12 @@ public class Frame : ICloneable
     [SerializeField]
     public List<Effect> effectList = new List<Effect>();
 
+    /// <summary>
+    /// 音效
+    /// </summary>
+    [SerializeField]
+    public List<string> audioList = new List<string>();
+
     public Frame()
     {
 

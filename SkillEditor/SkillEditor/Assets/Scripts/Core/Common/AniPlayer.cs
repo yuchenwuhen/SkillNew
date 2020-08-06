@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AniPlayer : MonoBehaviour
 {
@@ -297,12 +298,12 @@ public class AniPlayer : MonoBehaviour
                 SetDebugDot(clip.frames[frame]); //设置触发点
             }
 
-            SetEffect(clip.frames[frame]); //设置/检测特效
+            SetAudio(clip.frames[frame]);
             if (m_playRunTime)
             {
-                //SetEffect(clip.frames[frame]); //设置/检测特效
-                //SetAudio(clip.frames[frame]);
+                SetEffect(clip.frames[frame]); //设置/检测特效 
             }
+
         }
 
         m_lastClip = clip;
@@ -591,8 +592,7 @@ public class AniPlayer : MonoBehaviour
     //每帧检测
     void SetEffect(Frame f)
     {
-        Debug.Log("time:" + frameCounter/m_fps);
-        //CheckEffect();
+        CheckEffect();
         foreach (var e in f.effectList)
         {
             Transform o = this.transform.Find(e.follow);
@@ -600,39 +600,15 @@ public class AniPlayer : MonoBehaviour
             {
                 if (o != null)
                 {
-                    //die d = new die();
-                    //d.lifetime = e.lifeframe;
+                    die d = new die();
+                    d.lifetime = e.lifeframe;
                     //d.effid = AniResource.PlayEffectLooped(e.name, e.position, dir, o);
-                    //livetimelist.Add(d);
-                    if (!onece)
-                    {
-                        go = GameObject.Instantiate(Resources.Load<GameObject>(e.name));
-                        go.transform.SetParent(o);
-                        onece = true;
-                        
-                    }
-                    if (go != null)
-                    {
-                        go.GetComponent<ParticleSystem>().Simulate(m_timer);
-                        Debug.Log("time:" + m_timer);
-                    }
-
+                    livetimelist.Add(d);
                 }
             }
             else
             {
-                if (!onece)
-                {
-                    go = GameObject.Instantiate(Resources.Load<GameObject>(e.name));
-                    go.transform.SetParent(o);
-                    onece = true;
-                    go.GetComponent<ParticleSystem>().Play();
-                }
-                if (go != null)
-                {
-                    go.GetComponent<ParticleSystem>().Simulate(m_timer);
-                    Debug.Log("time:" + m_timer);
-                }
+                //AniResource.PlayEffect(e.name, o, e.position, e.isFollow, dir);
             }
         }
     }
@@ -657,6 +633,112 @@ public class AniPlayer : MonoBehaviour
     }
 
 
+
+    #endregion
+
+    #region 音效
+
+    private List<AudioSource> m_audioSourceList = new List<AudioSource>();
+
+    public AudioSource GetValidSource()
+    {
+        for (int i = 0; i < m_audioSourceList.Count; i++)
+        {
+            if (m_audioSourceList[i]==null)
+            {
+                m_audioSourceList.Remove(m_audioSourceList[i]);
+                i--;
+            }
+        }
+
+        foreach (var item in m_audioSourceList)
+        {
+            if (!item.isPlaying)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void StopAllAudio()
+    {
+        foreach (var item in m_audioSourceList)
+        {
+            if (item.isPlaying)
+            {
+                item.Stop();
+            }
+        }
+    }
+
+    public void ClearAudioSource(AudioSource audioSource)
+    {
+        if (audioSource != null)
+        {
+            if (m_audioSourceList.Contains(audioSource))
+            {
+                m_audioSourceList.Remove(audioSource);
+            }
+        }
+        DestroyImmediate(audioSource);
+    }
+
+    void SetAudio(Frame f)
+    {
+        foreach (var audio in f.audioList)
+        {
+            PlaySound(audio);
+        }
+    }
+
+    public void PlaySound(string audioName)
+    {
+        var sfx = Resources.Load(audioName) as AudioClip;
+        if (sfx == null)
+        {
+            Debug.LogWarning("can't find audioName in Resources" + audioName);
+            return;
+        }
+
+        if (m_playRunTime)
+        {
+            //编辑器
+            PlaySound(sfx);
+        }
+        else
+        {
+            //运行模式暂时用这种，有统一音频框架后替换
+            PlaySound(sfx);
+        }
+    }
+
+    void PlaySound(AudioClip audioClip)
+    {
+        AudioSource audioSource = GetValidSource();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            m_audioSourceList.Add(audioSource);
+        }
+        audioSource.clip = audioClip;
+        audioSource.Play();
+
+        StartCoroutine(AudioPlayFinished(audioClip.length, ()=> {
+            ClearAudioSource(audioSource);
+        }));
+    }
+
+    private IEnumerator AudioPlayFinished(float time, UnityAction callback)
+    {
+        yield return new WaitForSeconds(time);
+
+        if (callback != null)
+        {
+            callback();
+        }
+    }
 
     #endregion
 }

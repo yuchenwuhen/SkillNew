@@ -12,7 +12,8 @@ public class Window_AniEditor : EditorWindow
 
     int m_toolsBar = 0;
 
-    Vector2 effectpos;
+    Vector2 m_effectpos;
+    Vector2 m_audioPos;
 
     private void OnGUI()
     {
@@ -60,7 +61,7 @@ public class Window_AniEditor : EditorWindow
 
         if (m_toolsBar == 0)  //特效编辑模式
         {
-            effectpos = GUILayout.BeginScrollView(effectpos, GUILayout.Width(500));
+            m_effectpos = GUILayout.BeginScrollView(m_effectpos, GUILayout.Width(500));
             {
                 GUI_Effect();
             }
@@ -69,12 +70,12 @@ public class Window_AniEditor : EditorWindow
         }
         else if (m_toolsBar == 1) //音效编辑模式
         {
-            //audiopos = GUILayout.BeginScrollView(audiopos, GUILayout.Width(300));
-            //{
-            //    GUI_Audio();
-            //}
-            //GUILayout.EndScrollView();
-            //Layout_DrawSeparatorV(Color.white);
+            m_audioPos = GUILayout.BeginScrollView(m_audioPos, GUILayout.Width(300));
+            {
+                GUI_Audio();
+            }
+            GUILayout.EndScrollView();
+            Layout_DrawSeparatorV(Color.white);
         }
 
         GUILayout.EndHorizontal();
@@ -393,5 +394,92 @@ public class Window_AniEditor : EditorWindow
         }
         //GUILayout.EndScrollView();
     }
+    #endregion
+
+    #region 音效模块
+
+    private string m_path;
+
+    Vector2 m_audioScroll;
+
+    AudioClip go = null;
+
+    void GUI_Audio()
+    {
+        GUILayout.Label("音乐系统：");
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("路径：");
+        m_path = EditorGUILayout.TextField(m_path,GUILayout.Width(100));
+
+        if (GUILayout.Button("载入音乐"))
+        {
+            AudioClip music = Resources.Load(m_path) as AudioClip;
+            if (music == null)
+            {
+                EditorUtility.DisplayDialog("waring", "Resource里不含该音乐文件，或该文件不是音效文件，请检查！", "OK");
+            }
+            else
+            {
+                editor.aniInEdit.frames[curframe].audioList.Add(m_path);
+                EditorUtility.SetDirty(editor.aniInEdit);
+            }
+        }
+
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+
+        GUILayout.Label("音频：");
+        go = EditorGUILayout.ObjectField(go, typeof(AudioClip), false) as AudioClip;
+
+        if (GUILayout.Button("载入音乐"))
+        {
+            //AudioClip music = go as AudioClip;
+            if (go == null)
+            {
+                EditorUtility.DisplayDialog("waring", "该文件不是音效文件，请检查！", "OK");
+            }
+            else
+            {
+                string path = AssetDatabase.GetAssetPath(go.GetInstanceID());
+                path = path.Replace("Assets/Resources/", "");
+                path = path.Substring(0,path.LastIndexOf("."));
+                editor.aniInEdit.frames[curframe].audioList.Add(path);
+                EditorUtility.SetDirty(editor.aniInEdit);
+            }
+        }
+
+        GUILayout.EndHorizontal();
+
+        //显示所有音乐信息
+        m_audioScroll = GUILayout.BeginScrollView(m_audioScroll, GUILayout.Width(300));
+
+        for (int i = editor.aniInEdit.frames[curframe].audioList.Count - 1; i >= 0; i--)
+        {
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label((editor.aniInEdit.frames[curframe].audioList.Count - i).ToString() + ":", GUILayout.Width(40));
+            GUILayout.Space(2);
+            GUILayout.Label(editor.aniInEdit.frames[curframe].audioList[i], GUILayout.Width(150));
+            GUILayout.Space(2);
+
+            if (GUILayout.Button("Play", GUILayout.Width(45)))
+            {
+                //AudioPlayer.Instance().PlaySoundOnce(editor.aniInEdit.frames[curframe].aduioList[i]);
+                //aniPlayer.resourceMgr.PlaySound();
+                aniPlayer.PlaySound(editor.aniInEdit.frames[curframe].audioList[i]);
+            }
+            if (GUILayout.Button("DEL", GUILayout.Width(45)))
+            {
+                editor.aniInEdit.frames[curframe].audioList.RemoveAt(i);
+            }
+
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndScrollView();
+    }
+
     #endregion
 }

@@ -21,4 +21,5 @@ public class Dev_AniEditor : MonoBehaviour
 
     public List<poolitem> PosePool = new List<poolitem>();
     public AniClip aniInEdit;//编辑的动画
+
 }

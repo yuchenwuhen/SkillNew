@@ -429,7 +429,12 @@ MonoBehaviour:
     eventsinfo: []
     boxesinfo: []
     dotesinfo: []
-    effectList: []
+    effectList:
+    - name: Effect/FX_ArtilleryStrike_01
+      position: {x: 0, y: 0, z: 0}
+      follow: effect
+      lifeframe: 60
+      isFollow: 0
     aduioList: []
   - fid: 1
     key: 1
