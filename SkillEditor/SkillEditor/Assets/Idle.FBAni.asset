@@ -18,66 +18,74 @@ MonoBehaviour:
   - fid: 0
     key: 1
     box_key: 1
-    dot_key: 1
+    dot_key: 0
     lerp: 0
     bonesinfo:
-    - t: {x: 0, y: 0, z: 0}
+    - t: {x: 3.7907999, y: 0, z: 0}
       s: {x: 1, y: 1, z: 1}
       r: {x: 0, y: 0, z: 0, w: 1}
       tag: 7
     boxesinfo: []
     dotesinfo: []
-    effectList:
-    - name: FX_ArtilleryStrike_01
-      position: {x: 0, y: 0, z: 0}
-      follow: GameObject
-      lifeframe: 5
-      isFollow: 0
-    audioList:
-    - hook_hit
+    effectList: []
+    audioList: []
   - fid: 1
     key: 1
-    box_key: 0
+    box_key: 1
     dot_key: 0
     lerp: 0
     bonesinfo:
-    - t: {x: 0.109199986, y: 0, z: 0}
+    - t: {x: 3.9, y: 0, z: 0}
       s: {x: 1, y: 1, z: 1}
       r: {x: 0, y: 0, z: 0, w: 1}
-      tag: 1
+      tag: 7
     boxesinfo: []
     dotesinfo: []
     effectList: []
     audioList: []
   - fid: 2
     key: 1
-    box_key: 0
+    box_key: 1
     dot_key: 0
     lerp: 0
     bonesinfo:
-    - t: {x: 0.40559992, y: 0, z: 0}
+    - t: {x: 3.9, y: 0, z: 0}
       s: {x: 1, y: 1, z: 1}
       r: {x: 0, y: 0, z: 0, w: 1}
-      tag: 1
+      tag: 7
     boxesinfo: []
     dotesinfo: []
     effectList: []
     audioList: []
   - fid: 3
     key: 1
-    box_key: 0
+    box_key: 1
+    dot_key: 0
+    lerp: 0
+    bonesinfo:
+    - t: {x: 0.40559992, y: 0, z: 0}
+      s: {x: 1, y: 1, z: 1}
+      r: {x: 0, y: 0, z: 0, w: 1}
+      tag: 7
+    boxesinfo: []
+    dotesinfo: []
+    effectList: []
+    audioList: []
+  - fid: 4
+    key: 1
+    box_key: 1
     dot_key: 0
     lerp: 0
     bonesinfo:
     - t: {x: 0.84239984, y: 0, z: 0}
       s: {x: 1, y: 1, z: 1}
       r: {x: 0, y: 0, z: 0, w: 1}
-      tag: 1
+      tag: 7
     boxesinfo: []
     dotesinfo: []
     effectList: []
     audioList: []
-  - fid: 4
+  - fid: 5
     key: 1
     box_key: 0
     dot_key: 0
@@ -91,35 +99,35 @@ MonoBehaviour:
     dotesinfo: []
     effectList: []
     audioList: []
-  - fid: 5
+  - fid: 6
     key: 1
-    box_key: 0
+    box_key: 1
     dot_key: 0
     lerp: 0
     bonesinfo:
     - t: {x: 1.95, y: 0, z: 0}
       s: {x: 1, y: 1, z: 1}
       r: {x: 0, y: 0, z: 0, w: 1}
-      tag: 1
+      tag: 7
     boxesinfo: []
     dotesinfo: []
     effectList: []
     audioList: []
-  - fid: 6
+  - fid: 7
     key: 1
-    box_key: 0
+    box_key: 1
     dot_key: 0
     lerp: 0
     bonesinfo:
     - t: {x: 2.5271997, y: 0, z: 0}
       s: {x: 1, y: 1, z: 1}
       r: {x: 0, y: 0, z: 0, w: 1}
-      tag: 1
+      tag: 7
     boxesinfo: []
     dotesinfo: []
     effectList: []
     audioList: []
-  - fid: 7
+  - fid: 8
     key: 1
     box_key: 0
     dot_key: 0
@@ -133,7 +141,7 @@ MonoBehaviour:
     dotesinfo: []
     effectList: []
     audioList: []
-  - fid: 8
+  - fid: 9
     key: 1
     box_key: 0
     dot_key: 0
@@ -147,7 +155,7 @@ MonoBehaviour:
     dotesinfo: []
     effectList: []
     audioList: []
-  - fid: 9
+  - fid: 10
     key: 1
     box_key: 0
     dot_key: 0
@@ -161,7 +169,7 @@ MonoBehaviour:
     dotesinfo: []
     effectList: []
     audioList: []
-  - fid: 10
+  - fid: 11
     key: 1
     box_key: 1
     dot_key: 1

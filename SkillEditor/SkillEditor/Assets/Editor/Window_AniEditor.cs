@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class Window_AniEditor : EditorWindow
 {
-    int m_curframe = 0;
 
     bool m_lockFrame = false;
     bool m_frameRecord = false;
 
     int m_toolsBar = 0;
 
+    Vector2 m_actionPos;
     Vector2 m_effectpos;
     Vector2 m_audioPos;
 
@@ -43,12 +43,17 @@ public class Window_AniEditor : EditorWindow
         GUILayout.BeginHorizontal();
 
         m_frameRecord = GUILayout.Toggle(m_frameRecord, "自动记录动画");
+        if (m_frameRecord)
+        {
+            //防止自动播放动画
+            aniPlayer.editorPlay = false;
+        }
 
         m_lockFrame = GUILayout.Toggle(m_lockFrame, "锁定帧");
 
         GUILayout.EndHorizontal();
 
-        string[] toolsStr = new string[] { "特效编辑","声音编辑" };
+        string[] toolsStr = new string[] { "动作编辑","特效编辑","声音编辑" };
         m_toolsBar = GUILayout.Toolbar(m_toolsBar, toolsStr);
 
         Layout_DrawSeparator(Color.white);
@@ -59,7 +64,25 @@ public class Window_AniEditor : EditorWindow
 
         GUILayout.BeginHorizontal();
 
-        if (m_toolsBar == 0)  //特效编辑模式
+        if (m_toolsBar == 0)    //动作编辑模式
+        {
+            m_actionPos = GUILayout.BeginScrollView(m_actionPos, GUILayout.Width(300));
+            {
+                if (!m_frameRecord)
+                {
+                    GUI_ClipFunc();
+                }
+                else
+                {
+                    GUI_FrameFunc();
+                }
+            }
+
+            GUILayout.EndScrollView();
+            Layout_DrawSeparatorV(Color.white);
+
+        }
+        else if (m_toolsBar == 1)  //特效编辑模式
         {
             m_effectpos = GUILayout.BeginScrollView(m_effectpos, GUILayout.Width(500));
             {
@@ -68,7 +91,7 @@ public class Window_AniEditor : EditorWindow
             GUILayout.EndScrollView();
             Layout_DrawSeparatorV(Color.white);
         }
-        else if (m_toolsBar == 1) //音效编辑模式
+        else if (m_toolsBar == 2) //音效编辑模式
         {
             m_audioPos = GUILayout.BeginScrollView(m_audioPos, GUILayout.Width(300));
             {
@@ -114,31 +137,31 @@ public class Window_AniEditor : EditorWindow
 
     #region 动作编辑模块
 
-    int curframe = 0;
+    int m_curframe = -1;
     Vector2 anipos = Vector2.zero;
 
     void SetFrame(int f, bool force = false)
     {
         if (m_lockFrame) return;
 
-        if (curframe != f || force)
+        if (m_curframe != f || force)
         {
             aniPlayer.SetPose(editor.aniInEdit, f, true);
-            curframe = f;
+            m_curframe = f;
         }
     }
 
     private void GUI_AniPos()
     {
-        GUILayout.Label("Animation pos:(" + curframe + "/" + editor.aniInEdit.aniFrameCount + ")");
+        GUILayout.Label("Animation pos:(" + m_curframe + "/" + editor.aniInEdit.aniFrameCount + ")");
 
-        int nf = (int)GUILayout.HorizontalScrollbar(curframe, 1, 0, editor.aniInEdit.aniFrameCount);
+        int nf = (int)GUILayout.HorizontalScrollbar(m_curframe, 1, 0, editor.aniInEdit.aniFrameCount);
         anipos = EditorGUILayout.BeginScrollView(anipos, true, false, GUILayout.Height(230));
         GUILayout.BeginHorizontal();
         for (int i = 0; i < editor.aniInEdit.aniFrameCount; i++)
         {
             var obc = GUI.backgroundColor;
-            if (curframe == i)
+            if (m_curframe == i)
             {
                 GUI.backgroundColor = Color.green;
             }
@@ -172,9 +195,9 @@ public class Window_AniEditor : EditorWindow
                 {
                     editor.aniInEdit.frames[i].lerp = lerp;
                     editor.aniInEdit.CalcLerpFrameOne(i);
-                    if (i == curframe)
+                    if (i == m_curframe)
                     {
-                        SetFrame(curframe, true);
+                        SetFrame(m_curframe, true);
                         EditorUtility.SetDirty(editor.aniInEdit);
                     }
                 }
@@ -220,6 +243,221 @@ public class Window_AniEditor : EditorWindow
 
         GUILayout.EndHorizontal();
         GUILayout.EndScrollView();
+    }
+
+    uint m_newAniLen = 1;
+
+    void GUI_ClipFunc()
+    {
+        GUILayout.Label("ClipFunc");
+
+        bool bclip = GUILayout.Toggle(editor.aniInEdit.loop, "是否循环动画");
+        if (bclip != editor.aniInEdit.loop)
+        {
+            editor.aniInEdit.loop = bclip;
+            EditorUtility.SetDirty(editor.aniInEdit);
+        }
+        if (GUILayout.Button("切换当前关键帧/非关键帧"))
+        {
+            if (m_curframe == 0 || m_curframe == editor.aniInEdit.aniFrameCount - 1)
+            {
+                EditorUtility.DisplayDialog("warning", "第一帧和最后一帧必须是关键帧", "ok");
+            }
+            else
+            {
+                editor.aniInEdit.frames[m_curframe].key = !editor.aniInEdit.frames[m_curframe].key;
+                EditorUtility.SetDirty(editor.aniInEdit);
+            }
+        }
+
+        GUILayout.Space(12);
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("插入帧", GUILayout.Width(70));
+        var str = GUILayout.TextField(m_newAniLen.ToString(), GUILayout.Width(40));
+        uint.TryParse(str, out m_newAniLen);
+        GUILayout.EndHorizontal();
+        if (GUILayout.Button("插入帧,当前帧之前"))
+        {
+            //if (editor.aniInEdit.frames.Count == 0)
+            //{
+            //    var fout = f.Clone() as FB.PosePlus.Frame;
+            //    fout.key = true;
+            //    editor.aniInEdit.frames.Insert(curframe + 1, fout);
+            //}
+            var f = editor.aniInEdit.frames[m_curframe];
+
+            for (int i = 0; i < m_newAniLen; i++)
+            {
+                var fout = f.Clone() as Frame;
+                fout.key = false;
+                editor.aniInEdit.frames.Insert(m_curframe, fout);
+            }
+
+            for (int i = 0; i < editor.aniInEdit.aniFrameCount; i++)
+            {
+                editor.aniInEdit.frames[i].fid = i;
+                if (i == 0 || i == editor.aniInEdit.aniFrameCount - 1)
+                {
+                    editor.aniInEdit.frames[i].key = true;
+                    editor.aniInEdit.frames[i].box_key = true;
+                    editor.aniInEdit.frames[i].dot_key = true;
+                }
+            }
+            EditorUtility.SetDirty(editor.aniInEdit);
+        }
+        if (GUILayout.Button("插入帧,当前帧之后"))
+        {
+            var f = editor.aniInEdit.frames[m_curframe];
+
+            for (int i = 0; i < m_newAniLen; i++)
+            {
+                var fout = f.Clone() as Frame;
+                fout.key = false;
+                editor.aniInEdit.frames.Insert(m_curframe + 1, fout);
+            }
+            //首位帧为关键帧
+            for (int i = 0; i < editor.aniInEdit.aniFrameCount; i++)
+            {
+                editor.aniInEdit.frames[i].fid = i;
+                if (i == 0 || i == editor.aniInEdit.aniFrameCount - 1)
+                {
+                    editor.aniInEdit.frames[i].key = true;
+                    editor.aniInEdit.frames[i].dot_key = true;
+                    editor.aniInEdit.frames[i].box_key = true;
+                }
+            }
+            EditorUtility.SetDirty(editor.aniInEdit);
+        }
+        GUILayout.Space(12);
+        if (GUILayout.Button("删除当前帧"))
+        {
+            if (editor.aniInEdit.frames.Count > 1)
+            {
+                editor.aniInEdit.frames.RemoveAt(m_curframe);
+                for (int i = 0; i < editor.aniInEdit.aniFrameCount; i++)
+                {
+                    editor.aniInEdit.frames[i].fid = i;
+                    if (i == 0 || i == editor.aniInEdit.aniFrameCount - 1)
+                    {
+                        editor.aniInEdit.frames[i].key = true;
+                        editor.aniInEdit.frames[i].box_key = true;
+                        editor.aniInEdit.frames[i].dot_key = true;
+                    }
+                }
+                if (m_curframe < 0) m_curframe = 0;
+                if (m_curframe >= editor.aniInEdit.aniFrameCount)
+                    m_curframe = editor.aniInEdit.aniFrameCount - 1;
+                EditorUtility.SetDirty(editor.aniInEdit);
+            }
+        }
+        if (GUILayout.Button("删除当前开始5帧"))
+        {
+            for (int c = 0; c < 5; c++)
+            {
+                if (editor.aniInEdit.frames.Count > 1 && m_curframe < editor.aniInEdit.aniFrameCount)
+                {
+                    editor.aniInEdit.frames.RemoveAt(m_curframe);
+                }
+            }
+            for (int i = 0; i < editor.aniInEdit.aniFrameCount; i++)
+            {
+                editor.aniInEdit.frames[i].fid = i;
+                if (i == 0 || i == editor.aniInEdit.aniFrameCount - 1)
+                {
+                    editor.aniInEdit.frames[i].key = true;
+                }
+            }
+            if (m_curframe < 0) m_curframe = 0;
+            if (m_curframe >= editor.aniInEdit.aniFrameCount)
+                m_curframe = editor.aniInEdit.aniFrameCount - 1;
+            EditorUtility.SetDirty(editor.aniInEdit);
+        }
+        GUILayout.Space(12);
+
+
+        if (editor.aniInEdit.frames.Count > 0 && editor.aniInEdit.frames[m_curframe].key)
+        {
+
+            var oc = GUI.color;
+            GUI.color = new Color(1.0f, 0.4f, 0.6f, 1.0f);
+            if (GUILayout.Button("记录到当前帧"))
+            {
+                AniClip ani = editor.aniInEdit;
+                List<Transform> trans = new List<Transform>();
+                foreach (var b in ani.boneinfo)
+                {
+                    trans.Add(editor.transform.Find(b));
+                }
+                var frame = new Frame(null, m_curframe, trans);
+                editor.aniInEdit.frames[m_curframe].bonesinfo = new List<PoseBoneMatrix>(frame.bonesinfo);
+                editor.aniInEdit.frames[m_curframe].key = true;
+
+                //前后自动插值
+                if (m_curframe != 0)
+                {
+                    editor.aniInEdit.ResetLerpFrameSegment((m_curframe - 1));
+                    EditorUtility.SetDirty(editor.aniInEdit);
+                }
+                if (m_curframe != editor.aniInEdit.frames.Count - 1)
+                {
+                    editor.aniInEdit.ResetLerpFrameSegment((m_curframe + 1));
+                    EditorUtility.SetDirty(editor.aniInEdit);
+                }
+                EditorUtility.SetDirty(editor.aniInEdit);
+            }
+            GUI.color = oc;
+        }
+        else
+        {
+            if (GUILayout.Button("重置非关键帧（线性）"))
+            {
+                editor.aniInEdit.ResetLerpFrameSegment(m_curframe);
+                EditorUtility.SetDirty(editor.aniInEdit);
+            }
+        }
+    }
+    bool bLockFrame = false;
+    bool bFrameRecord = false;
+
+    System.DateTime lastRec = System.DateTime.Now;
+    void GUI_FrameFunc()
+    {
+        GUILayout.Label("记录模式");
+        GUILayout.Label("非关键帧不自动记录修改");
+        GUILayout.Label("关键帧自动记录角色动作的状态");
+        GUILayout.Label("每秒钟记录一次");
+        this.Repaint();
+
+        if ((System.DateTime.Now - lastRec).TotalSeconds > 1.0f)
+        {
+            lastRec = System.DateTime.Now;
+            //非关键帧不自动记录修改
+            if (editor.aniInEdit.frames[m_curframe].key == false) return;
+
+            Debug.LogWarning("rec frame." + lastRec.ToLongTimeString());
+
+            //record ani
+            AniClip ani = editor.aniInEdit;
+            List<Transform> trans = new List<Transform>();
+            foreach (var b in ani.boneinfo)
+            {
+                trans.Add(editor.transform.Find(b));
+            }
+            var frame = new Frame(null, m_curframe, trans);
+            frame.key = true;
+            frame.box_key = true;
+            editor.aniInEdit.frames[m_curframe] = frame;
+
+            //记录盒子
+            SaveEditData();
+
+        }
+    }
+
+    void SaveEditData()
+    {
+        EditorUtility.SetDirty(editor.aniInEdit);
+        SetFrame(m_curframe, true);
     }
 
     #endregion
@@ -331,7 +569,7 @@ public class Window_AniEditor : EditorWindow
                 e.follow = effectAddr;
                 e.lifeframe = (int)effectlife;
                 e.isFollow = isFollow;
-                editor.aniInEdit.frames[curframe].effectList.Add(e);
+                editor.aniInEdit.frames[m_curframe].effectList.Add(e);
                 EditorUtility.SetDirty(editor.aniInEdit);
             }
         }
@@ -347,9 +585,9 @@ public class Window_AniEditor : EditorWindow
         GUILayout.Label("生命周期", GUILayout.Width(50));
 
         GUILayout.EndHorizontal();
-        for (int m = editor.aniInEdit.frames[curframe].effectList.Count - 1; m >= 0; m--)
+        for (int m = editor.aniInEdit.frames[m_curframe].effectList.Count - 1; m >= 0; m--)
         {
-            var e = editor.aniInEdit.frames[curframe].effectList[m];
+            var e = editor.aniInEdit.frames[m_curframe].effectList[m];
             GUILayout.BeginHorizontal();
             e.name = GUILayout.TextField(e.name, GUILayout.Width(50));
             GUILayout.Space(2);
@@ -386,7 +624,7 @@ public class Window_AniEditor : EditorWindow
             GUILayout.Space(2);
             if (GUILayout.Button("DEL", GUILayout.Width(50)))
             {
-                editor.aniInEdit.frames[curframe].effectList.Remove(e);
+                editor.aniInEdit.frames[m_curframe].effectList.Remove(e);
             }
 
             GUILayout.EndHorizontal();
@@ -421,7 +659,7 @@ public class Window_AniEditor : EditorWindow
             }
             else
             {
-                editor.aniInEdit.frames[curframe].audioList.Add(m_path);
+                editor.aniInEdit.frames[m_curframe].audioList.Add(m_path);
                 EditorUtility.SetDirty(editor.aniInEdit);
             }
         }
@@ -445,7 +683,7 @@ public class Window_AniEditor : EditorWindow
                 string path = AssetDatabase.GetAssetPath(go.GetInstanceID());
                 path = path.Replace("Assets/Resources/", "");
                 path = path.Substring(0,path.LastIndexOf("."));
-                editor.aniInEdit.frames[curframe].audioList.Add(path);
+                editor.aniInEdit.frames[m_curframe].audioList.Add(path);
                 EditorUtility.SetDirty(editor.aniInEdit);
             }
         }
@@ -455,24 +693,24 @@ public class Window_AniEditor : EditorWindow
         //显示所有音乐信息
         m_audioScroll = GUILayout.BeginScrollView(m_audioScroll, GUILayout.Width(300));
 
-        for (int i = editor.aniInEdit.frames[curframe].audioList.Count - 1; i >= 0; i--)
+        for (int i = editor.aniInEdit.frames[m_curframe].audioList.Count - 1; i >= 0; i--)
         {
             GUILayout.BeginHorizontal();
 
-            GUILayout.Label((editor.aniInEdit.frames[curframe].audioList.Count - i).ToString() + ":", GUILayout.Width(40));
+            GUILayout.Label((editor.aniInEdit.frames[m_curframe].audioList.Count - i).ToString() + ":", GUILayout.Width(40));
             GUILayout.Space(2);
-            GUILayout.Label(editor.aniInEdit.frames[curframe].audioList[i], GUILayout.Width(150));
+            GUILayout.Label(editor.aniInEdit.frames[m_curframe].audioList[i], GUILayout.Width(150));
             GUILayout.Space(2);
 
             if (GUILayout.Button("Play", GUILayout.Width(45)))
             {
                 //AudioPlayer.Instance().PlaySoundOnce(editor.aniInEdit.frames[curframe].aduioList[i]);
                 //aniPlayer.resourceMgr.PlaySound();
-                aniPlayer.PlaySound(editor.aniInEdit.frames[curframe].audioList[i]);
+                aniPlayer.PlaySound(editor.aniInEdit.frames[m_curframe].audioList[i]);
             }
             if (GUILayout.Button("DEL", GUILayout.Width(45)))
             {
-                editor.aniInEdit.frames[curframe].audioList.RemoveAt(i);
+                editor.aniInEdit.frames[m_curframe].audioList.RemoveAt(i);
             }
 
             GUILayout.EndHorizontal();

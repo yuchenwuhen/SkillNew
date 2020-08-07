@@ -7,9 +7,9 @@ using UnityEngine;
 [CustomEditor(typeof(AniPlayer))]
 public class AniPlayerInspector : Editor
 {
-    bool bPlay = false;
+    //bool bPlay = false;
 
-    DateTime last = DateTime.Now;
+    DateTime m_last = DateTime.Now;
 
     public override void OnInspectorGUI()
     {
@@ -30,7 +30,7 @@ public class AniPlayerInspector : Editor
                 if (GUILayout.Button("play", GUILayout.Width(50)))
                 {
                     con.Play(c);
-                    bPlay = true;
+                    con.editorPlay = true;
                 }
 
                 GUILayout.EndHorizontal();
@@ -45,7 +45,7 @@ public class AniPlayerInspector : Editor
                     {
 
                         con.Play(c, sub);
-                        bPlay = true;
+                        con.editorPlay = true;
                     }
                     GUILayout.EndHorizontal();
                 }
@@ -55,11 +55,11 @@ public class AniPlayerInspector : Editor
             }
         }
 
-        if (bPlay)
+        if (con.editorPlay)
         {
             DateTime _now = DateTime.Now;
-            float delta = (float)(_now - last).TotalSeconds;
-            last = _now;
+            float delta = (float)(_now - m_last).TotalSeconds;
+            m_last = _now;
             con.OnUpdate(delta);
             Repaint();
         }

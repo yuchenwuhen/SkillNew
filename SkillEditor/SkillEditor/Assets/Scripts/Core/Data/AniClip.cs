@@ -87,4 +87,39 @@ public class AniClip : ScriptableObject
         }
     }
 
+    public void ResetLerpFrameSegment(int frame)
+    {
+        //搜索开始与结束帧
+        if (frames[frame].key) return;
+        if (frame <= 0 || frame >= frames.Count - 1) return;
+        int ibegin = frame;
+        for (; ibegin >= 0; ibegin--)
+        {
+            if (frames[ibegin].key)
+            {
+                break;
+            }
+        }
+        if (ibegin == frame) return;
+        int iend = frame;
+        for (; iend < frames.Count; iend++)
+        {
+            if (frames[iend].key)
+            {
+                break;
+            }
+        }
+        if (iend == frame) return;
+        //找到最近两个关键帧之间 插值
+        for (int i = ibegin + 1; i < iend; i++)
+        {
+            float d1 = (i - ibegin);
+            float d2 = (iend - i);
+            float lerp = d1 / (d1 + d2);
+            frames[i] = Frame.Lerp(frames[ibegin], frames[iend], lerp);
+            frames[i].lerp = lerp;
+            frames[i].fid = i;
+        }
+    }
+
 }

@@ -7,6 +7,8 @@ using UnityEngine;
 public class AniEditor_Inspector : Editor
 {
 
+    bool test = false;
+
     public override void OnInspectorGUI()
     {
         if (this.target == null) return;

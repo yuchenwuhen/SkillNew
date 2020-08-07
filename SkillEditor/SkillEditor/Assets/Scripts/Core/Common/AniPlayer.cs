@@ -64,6 +64,20 @@ public class AniPlayer : MonoBehaviour
 
     private float m_playTime = 0;
 
+    /// <summary>
+    /// Editor控制Play变量，防止因为调用DestroyImmediate删除音频组件（AniPlayerInspector会重新初始化一遍，变量值就改变了）
+    /// </summary>
+    public bool editorPlay
+    {
+        get;
+        set;
+    }
+
+    private void Start()
+    {
+        m_playRunTime = true;
+    }
+
     public void OnUpdate(float delta)
     {
         //帧推行
