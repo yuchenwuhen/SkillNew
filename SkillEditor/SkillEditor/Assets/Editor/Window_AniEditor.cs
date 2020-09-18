@@ -56,11 +56,11 @@ public class Window_AniEditor : EditorWindow
         string[] toolsStr = new string[] { "动作编辑","特效编辑","声音编辑" };
         m_toolsBar = GUILayout.Toolbar(m_toolsBar, toolsStr);
 
-        Layout_DrawSeparator(Color.white);
+        TableToolMenu.Layout_DrawSeparator(Color.white);
 
         GUI_AniPos();
 
-        Layout_DrawSeparator(Color.white);
+        TableToolMenu.Layout_DrawSeparator(Color.white);
 
         GUILayout.BeginHorizontal();
 
@@ -79,7 +79,7 @@ public class Window_AniEditor : EditorWindow
             }
 
             GUILayout.EndScrollView();
-            Layout_DrawSeparatorV(Color.white);
+            TableToolMenu.Layout_DrawSeparatorV(Color.white);
 
         }
         else if (m_toolsBar == 1)  //特效编辑模式
@@ -89,7 +89,7 @@ public class Window_AniEditor : EditorWindow
                 GUI_Effect();
             }
             GUILayout.EndScrollView();
-            Layout_DrawSeparatorV(Color.white);
+            TableToolMenu.Layout_DrawSeparatorV(Color.white);
         }
         else if (m_toolsBar == 2) //音效编辑模式
         {
@@ -98,42 +98,13 @@ public class Window_AniEditor : EditorWindow
                 GUI_Audio();
             }
             GUILayout.EndScrollView();
-            Layout_DrawSeparatorV(Color.white);
+            TableToolMenu.Layout_DrawSeparatorV(Color.white);
         }
 
         GUILayout.EndHorizontal();
     }
 
-    /// <summary>
-    /// 绘制横填充框
-    /// —
-    /// </summary>
-    /// <param name="color"></param>
-    /// <param name="height"></param>
-    public static void Layout_DrawSeparator(Color color, float height = 4f)
-    {
 
-        Rect rect = GUILayoutUtility.GetLastRect();
-        GUI.color = color;
-        GUI.DrawTexture(new Rect(rect.xMin, rect.yMax, Screen.width, height), EditorGUIUtility.whiteTexture);
-        GUI.color = Color.white;
-        GUILayout.Space(height);
-    }
-
-    /// <summary>
-    /// 绘制垂直填充框
-    /// |
-    /// </summary>
-    /// <param name="color"></param>
-    /// <param name="width"></param>
-    public static void Layout_DrawSeparatorV(Color color, float width = 4f)
-    {
-        Rect rect = GUILayoutUtility.GetLastRect();
-        GUI.color = color;
-        GUI.DrawTexture(new Rect(rect.xMax, rect.yMin, width, rect.height), EditorGUIUtility.whiteTexture);
-        GUI.color = Color.white;
-        GUILayout.Space(width);
-    }
 
     #region 动作编辑模块
 

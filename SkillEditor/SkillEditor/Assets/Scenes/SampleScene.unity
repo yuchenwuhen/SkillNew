@@ -435,6 +435,7 @@ GameObject:
   - component: {fileID: 2043049918}
   - component: {fileID: 2043049923}
   - component: {fileID: 2043049924}
+  - component: {fileID: 2043049925}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -565,3 +566,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PosePool: []
   aniInEdit: {fileID: 11400000, guid: 5f68a4788468c9746b0038de3aba2de4, type: 2}
+--- !u!114 &2043049925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043049917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df216312c80145409a18e2cc1e55c3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skills: {fileID: 0}
